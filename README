@@ -51,6 +51,11 @@ banners to display with a bare <r:ad_banner/> tag. If, for some reason, you want
 to display the same banner multiple times on a page you must use the name
 attribute to do so.
 
+A matches attribute can also be specified to display a random ad banner with name matches
+the string given in the matches attribute.
+
+  <r:ad_banner matches="pattern" />
+
 == Dependencies
 
 This extension depends on the paperclipped extension and incorporates modified

@@ -19,6 +19,30 @@ describe 'AdBanners' do
 
   describe '<r:ad_banner> for a random banner' do
 
+    before do
+      %w( one_small one_large two_small two_large three_small three_large ).each do |name|
+        asset = Asset.create!(:title => name,
+                              :asset_file_name => "#{name}.jpg",
+                              :asset_content_type => 'image/jpeg',
+                              :asset_file_size => 1234 + rand(1000))
+        AdBanner.create!(:name => name,
+                         :asset => asset,
+                         :link_url => "http://www.#{name}.com",
+                         :weight => 1,
+                         :link_target => '')
+    end
+
+    it 'should return a link for a random banner with name matches large' do
+      tag = %{<r:ad_banner matches="large"/>}
+      expected = %r{<a href="http://www.(one_large|two_large|three_large).com"><img src="/assets/\d+/\1.jpg" title="\1" alt="\1" /></a>}
+
+      pages(:home).should render(tag).matching(expected)
+    end
+
+  end
+
+  describe '<r:ad_banner> for a random banner' do
+
     it 'should return a link for a random banner' do
       tag = %{<r:ad_banner/>}
       expected = %r{<a href="http://www.(one|two|three).com"><img src="/assets/\d+/\1.jpg" title="\1" alt="\1" /></a>}

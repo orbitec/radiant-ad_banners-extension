@@ -7,12 +7,14 @@ module AdBannerTags
     A banner will only appear once on a given page unless otherwise forced with the @name@ attribute.
 
     *Usage:*
-    <pre><code><r:ad_banner [name="banner_name"]/></code></pre>
+    <pre><code><r:ad_banner [name="banner_name" matches="pattern"]/></code></pre>
   }
   tag 'ad_banner' do |tag|
     @selected_banners ||= []
     ad_banner = if tag.attr['name']
                   AdBanner.find_by_name(tag.attr['name'], :joins => "INNER JOIN assets ON assets.id = ad_banners.asset_id")
+                elsif tag.attr['matches']
+                  AdBanner.select_banner(:exclude => @selected_banners, :matches => tag.attr['matches'])
                 else
                   AdBanner.select_banner(:exclude => @selected_banners)
                 end
